@@ -1,0 +1,141 @@
+.calendarPage {
+  min-height: 100vh;
+  padding: 2rem 0;
+  background-color: var(--bg-color);
+}
+
+.pageHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pageTitle {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pageDescription {
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.calendarContainer {
+  margin-bottom: 3rem;
+}
+
+.pageFooter {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.legend {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.legendTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.legendItems {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.legendDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legendStar {
+  font-size: 1rem;
+  display: inline-block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .calendarPage {
+    padding: 1rem 0;
+  }
+
+  .pageHeader {
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+
+  .pageFooter {
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .legendItems {
+    gap: 1rem;
+  }
+
+  .legendItem {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageHeader {
+    padding: 0 0.5rem;
+  }
+
+  .pageFooter {
+    padding: 1rem;
+  }
+
+  .legendItems {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .legendItem {
+    gap: 0.75rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .pageFooter {
+    background: none !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  .pageDescription {
+    color: #666 !important;
+  }
+}

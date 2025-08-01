@@ -1,0 +1,279 @@
+.customizeForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.preview {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+}
+
+.previewTitle {
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.previewCard {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.previewQuote {
+  font-size: var(--font-size-large);
+  line-height: 1.6;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  font-family: var(--font-family);
+  quotes: '"' '"' ''' ''';
+}
+
+.previewQuote::before {
+  content: open-quote;
+  font-size: 1.2em;
+  color: var(--primary-color);
+  margin-right: 0.1em;
+}
+
+.previewQuote::after {
+  content: close-quote;
+  font-size: 1.2em;
+  color: var(--primary-color);
+  margin-left: 0.1em;
+}
+
+.previewAuthor {
+  text-align: right;
+  color: var(--text-secondary);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.previewAuthor::before {
+  content: '— ';
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.controlLabel {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--bg-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.radioOption:hover {
+  border-color: var(--primary-color);
+  background-color: rgba(74, 144, 226, 0.05);
+}
+
+.radioOption input[type="radio"] {
+  margin: 0;
+  accent-color: var(--primary-color);
+}
+
+.radioOption input[type="radio"]:checked + .radioText {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.radioText {
+  flex: 1;
+  color: var(--text-color);
+  transition: var(--transition);
+  font-size: 1rem;
+}
+
+.saveSection {
+  margin-top: 1rem;
+}
+
+.saveSection .btn {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.message {
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.message.success {
+  background-color: rgba(40, 167, 69, 0.1);
+  border: 1px solid var(--success-color);
+  color: var(--success-color);
+}
+
+.message.error {
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid var(--danger-color);
+  color: var(--danger-color);
+}
+
+.info {
+  background-color: rgba(74, 144, 226, 0.1);
+  border: 1px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.info p {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .customizeForm {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1.5rem;
+  }
+
+  .preview {
+    position: static;
+    order: 2;
+  }
+
+  .controls {
+    order: 1;
+  }
+
+  .radioGroup {
+    gap: 0.5rem;
+  }
+
+  .radioOption {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .customizeForm {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .preview {
+    padding: 1rem;
+  }
+
+  .previewCard {
+    padding: 1rem;
+  }
+
+  .previewQuote {
+    font-size: var(--font-size-medium);
+  }
+
+  .controlLabel {
+    font-size: 1rem;
+  }
+
+  .radioOption {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .radioText {
+    font-size: 0.9rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .saveSection,
+  .message {
+    display: none !important;
+  }
+
+  .customizeForm {
+    background: none !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+
+  .preview,
+  .previewCard {
+    background: none !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .radioOption {
+    border-width: 2px;
+  }
+
+  .radioOption:hover {
+    border-width: 2px;
+  }
+
+  .message {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .radioOption {
+    transition: none;
+  }
+
+  .radioText {
+    transition: none;
+  }
+}

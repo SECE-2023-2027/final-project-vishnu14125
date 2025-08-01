@@ -1,0 +1,51 @@
+.customizePage {
+  min-height: 100vh;
+  padding: 2rem 0;
+  background-color: var(--bg-color);
+}
+
+.pageHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pageTitle {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pageDescription {
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.customizeContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .customizePage {
+    padding: 1rem 0;
+  }
+
+  .pageHeader {
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+
+  .customizeContainer {
+    padding: 0 1rem;
+  }
+}
