@@ -7,7 +7,7 @@ import styles from './LoginForm.module.css';
 
 export default function LoginForm() {
   const router = useRouter();
-  const [mode, setMode] = useState('signin'); // 'signin' or 'signup'
+  const [mode, setMode] = useState('signin');  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -34,7 +34,7 @@ export default function LoginForm() {
 
     try {
       if (mode === 'signup') {
-        // Registration
+         
         if (formData.password !== formData.confirmPassword) {
           setError('Passwords do not match');
           setLoading(false);
@@ -61,7 +61,7 @@ export default function LoginForm() {
           return;
         }
 
-        // Auto-sign in after registration
+         
         const result = await signIn('credentials', {
           email: formData.email,
           password: formData.password,
@@ -74,7 +74,7 @@ export default function LoginForm() {
           router.push('/');
         }
       } else {
-        // Sign in
+         
         const result = await signIn('credentials', {
           email: formData.email,
           password: formData.password,
@@ -117,7 +117,7 @@ export default function LoginForm() {
 
   return (
     <div className={styles.loginForm}>
-      {/* GitHub Sign In */}
+       
       <button
         onClick={handleGitHubSignIn}
         disabled={loading}
@@ -139,14 +139,14 @@ export default function LoginForm() {
         <span className={styles.dividerText}>or</span>
       </div>
 
-      {/* Error Message */}
+       
       {error && (
         <div className={styles.errorMessage}>
           {error}
         </div>
       )}
 
-      {/* Credentials Form */}
+      
       <form onSubmit={handleCredentialsSubmit} className={styles.credentialsForm}>
         {mode === 'signup' && (
           <div className="form-group">
@@ -230,7 +230,7 @@ export default function LoginForm() {
         </button>
       </form>
 
-      {/* Toggle Mode */}
+       
       <div className={styles.toggleMode}>
         <p>
           {mode === 'signin' ? "Don't have an account?" : "Already have an account?"}

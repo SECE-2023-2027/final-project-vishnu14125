@@ -37,7 +37,7 @@ export default function CalendarGrid({
   const todayString = getTodayString();
   const currentDate = new Date();
 
-  // Fetch quotes for the current month
+   
   useEffect(() => {
     fetchQuotesForMonth(currentYear, currentMonth);
   }, [currentYear, currentMonth]);
@@ -60,7 +60,7 @@ export default function CalendarGrid({
       
       const data = await response.json();
       
-      // Convert array to object with date as key
+       
       const quotesMap = {};
       data.quotes.forEach(quote => {
         quotesMap[quote.date] = quote;
@@ -68,7 +68,7 @@ export default function CalendarGrid({
       
       setQuotes(quotesMap);
       
-      // Fetch favorites if user is logged in
+      
       try {
         const favResponse = await fetch('/api/favorites');
         if (favResponse.ok) {
@@ -76,7 +76,7 @@ export default function CalendarGrid({
           setFavorites(new Set(favData.favorites));
         }
       } catch (favError) {
-        // User not logged in or error fetching favorites
+         
         setFavorites(new Set());
       }
       
@@ -96,7 +96,7 @@ export default function CalendarGrid({
   const handleNextMonth = () => {
     const { year, month } = getNavigationDates(currentYear, currentMonth).next;
     
-    // Prevent navigation beyond current month if not allowed
+    
     if (!allowFutureNavigation) {
       const nextMonthDate = new Date(year, month, 1);
       const currentMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);

@@ -7,8 +7,6 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const { name, email, password } = body;
-
-    // Validation
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: 'Name, email, and password are required' },
@@ -23,7 +21,6 @@ export async function POST(request) {
       );
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
@@ -34,7 +31,6 @@ export async function POST(request) {
 
     await connectDB();
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return NextResponse.json(
@@ -43,11 +39,10 @@ export async function POST(request) {
       );
     }
 
-    // Hash password
+     
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Create user
     const newUser = await User.create({
       name: name.trim(),
       email: email.toLowerCase().trim(),
