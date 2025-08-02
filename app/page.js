@@ -86,6 +86,7 @@ export default async function HomePage() {
             <QuoteCard 
               quote={quoteOfTheWeek} 
               featured={true}
+              showActions={true}
             />
           </section>
         )}

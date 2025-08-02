@@ -1,86 +1,60 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { isValidDate, isFuture, formatLongDisplayDate, addDays, subtractDays } from '../../../lib/dateUtils.js';
-import connectDB from '../../../db/connection.js';
-import Quote from '../../../db/Quote.js';
 import QuoteCard from '../../../components/QuoteCard.js';
 import styles from './page.module.css';
+import { useSession } from 'next-auth/react';
 
-export async function generateMetadata({ params }) {
+export default function QuoteDetailPage({ params }) {
   const { date } = params;
-  
-  if (!isValidDate(date)) {
-    return {
-      title: 'Invalid Date - Quote Calendar',
-    };
-  }
+  const { data: session } = useSession();
+  const [quote, setQuote] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  try {
-    await connectDB();
-    const quote = await Quote.findOne({ date }).lean();
-    
-    if (!quote) {
-      return {
-        title: `No Quote for ${formatLongDisplayDate(date)} - Quote Calendar`,
-      };
+  useEffect(() => {
+    if (!isValidDate(date)) {
+      notFound();
+    }
+    if (isFuture(date)) {
+      redirect('/calendar');
     }
 
-    return {
-      title: `Quote for ${formatLongDisplayDate(date)} - Quote Calendar`,
-      description: `"${quote.text}" - ${quote.author}`,
-      openGraph: {
-        title: `Quote for ${formatLongDisplayDate(date)}`,
-        description: `"${quote.text}" - ${quote.author}`,
-        type: 'article',
-      },
-    };
-  } catch (error) {
-    return {
-      title: 'Quote Calendar',
-    };
-  }
-}
-
-import { getSession } from '../../../auth/sessionUtils.js';
-import User from '../../../db/User.js';
-
-export default async function QuoteDetailPage({ params }) {
-  const { date } = params;
-  const session = await getSession();
-
-  // Validate date format
-  if (!isValidDate(date)) {
-    notFound();
-  }
-
-  // Block future dates
-  if (isFuture(date)) {
-    redirect('/calendar');
-  }
-
-  let quote = null;
-  let error = null;
-  let isFavorite = false;
-
-  try {
-    await connectDB();
-    quote = await Quote.findOne({ date }).lean();
-    
-    if (quote) {
-      quote._id = quote._id.toString();
-      if (session) {
-        const user = await User.findById(session.user.id).lean();
-        if (user) {
-          isFavorite = user.favorites.includes(date);
+    const fetchQuote = async () => {
+      try {
+        const response = await fetch(`/api/quotes?date=${date}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch quote');
         }
+        const data = await response.json();
+        if (data.quotes.length > 0) {
+          setQuote(data.quotes[0]);
+          if (session) {
+            const favResponse = await fetch('/api/favorites');
+            if (favResponse.ok) {
+              const favData = await favResponse.json();
+              setIsFavorite(favData.favorites.includes(date));
+            }
+          }
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-    }
-  } catch (err) {
-    console.error('Error fetching quote:', err);
-    error = 'Failed to load quote';
-  }
+    };
 
-  // Calculate navigation dates
+    fetchQuote();
+  }, [date, session]);
+
+  const handleFavoriteToggle = (date, newIsFavorite) => {
+    setIsFavorite(newIsFavorite);
+  };
+
   const prevDate = subtractDays(date, 1);
   const nextDate = addDays(date, 1);
   const isNextFuture = isFuture(nextDate);
@@ -88,7 +62,6 @@ export default async function QuoteDetailPage({ params }) {
   return (
     <div className={styles.quotePage}>
       <div className="container">
-        {/* Navigation */}
         <nav className={styles.quoteNav}>
           <Link href={`/quote/${prevDate}`} className={styles.navBtn}>
             ← Previous Day
@@ -103,7 +76,6 @@ export default async function QuoteDetailPage({ params }) {
           )}
         </nav>
 
-        {/* Page Header */}
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>
             Quote for {formatLongDisplayDate(date)}
@@ -115,14 +87,12 @@ export default async function QuoteDetailPage({ params }) {
           )}
         </div>
 
-        {/* Quote Content */}
-        {error ? (
+        {loading ? (
+          <QuoteCard loading={true} />
+        ) : error ? (
           <div className={styles.error}>
             <h2>Error Loading Quote</h2>
             <p>{error}</p>
-            <Link href="/calendar" className="btn btn-primary">
-              Return to Calendar
-            </Link>
           </div>
         ) : quote ? (
           <div className={styles.quoteContainer}>
@@ -132,6 +102,7 @@ export default async function QuoteDetailPage({ params }) {
               featured={quote.isQuoteOfTheWeek}
               showActions={true}
               isInitialFavorite={isFavorite}
+              onFavoriteToggle={handleFavoriteToggle}
             />
           </div>
         ) : (
@@ -152,7 +123,6 @@ export default async function QuoteDetailPage({ params }) {
           </div>
         )}
 
-        {/* Additional Navigation */}
         <div className={styles.bottomNav}>
           <div className={styles.navGroup}>
             <Link href={`/quote/${prevDate}`} className="btn btn-secondary">

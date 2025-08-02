@@ -118,7 +118,7 @@ export default function QuoteCard({
                 className={styles.actionBtn}
                 title="Share quote"
               >
-                
+                📤
               </button>
               {canEdit && (
                 <Link
@@ -126,7 +126,7 @@ export default function QuoteCard({
                   className={styles.actionBtn}
                   title="Edit quote"
                 >
-  
+                  ✏️
                 </Link>
               )}
             </div>
