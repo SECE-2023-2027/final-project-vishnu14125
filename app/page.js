@@ -80,7 +80,7 @@ export default async function HomePage() {
           <section className={styles.weekSection}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>
-                ⭐ Quote of the Week
+                 Quote of the Week
               </h2>
             </div>
             <QuoteCard 
