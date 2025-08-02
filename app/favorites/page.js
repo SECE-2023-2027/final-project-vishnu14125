@@ -1,81 +1,81 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/authConfig.js';
-import connectDB from '../../db/connection.js';
-import User from '../../db/User.js';
-import Quote from '../../db/Quote.js';
+import { useSession } from 'next-auth/react';
 import QuoteCard from '../../components/QuoteCard.js';
 import styles from './page.module.css';
 
-export const metadata = {
-  title: 'My Favorites - Quote Calendar',
-  description: 'View and manage your favorite quotes from Quote Calendar.',
-};
+export default function FavoritesPage() {
+  const { data: session, status } = useSession();
+  const [favoriteQuotes, setFavoriteQuotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-export default async function FavoritesPage() {
-  const session = await getServerSession(authOptions);
-  
-  if (!session) {
-    redirect('/login');
-  }
-
-  let favoriteQuotes = [];
-  let error = null;
-
-  try {
-    await connectDB();
-    
-    const user = await User.findById(session.user.id);
-    if (user && user.favorites.length > 0) {
-      favoriteQuotes = await Quote.find({
-        date: { $in: user.favorites }
-      }).sort({ date: -1 }).lean();
-      
-      // Convert MongoDB ObjectIds to strings
-      favoriteQuotes = favoriteQuotes.map(quote => ({
-        ...quote,
-        _id: quote._id.toString(),
-      }));
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      redirect('/login');
     }
-  } catch (err) {
-    console.error('Error fetching favorites:', err);
-    error = 'Failed to load your favorite quotes';
-  }
+
+    if (status === 'authenticated') {
+      const fetchFavorites = async () => {
+        try {
+          const response = await fetch('/api/favorites');
+          if (!response.ok) {
+            throw new Error('Failed to fetch favorites');
+          }
+          const data = await response.json();
+          setFavoriteQuotes(data.quotes);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchFavorites();
+    }
+  }, [status]);
+
+  const handleFavoriteToggle = (date, isFavorite) => {
+    if (!isFavorite) {
+      setFavoriteQuotes(prev => prev.filter(q => q.date !== date));
+    }
+  };
 
   return (
     <div className={styles.favoritesPage}>
       <div className="container">
         <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>❤️ My Favorite Quotes</h1>
+          <h1 className={styles.pageTitle}>My Favorite Quotes</h1>
           <p className={styles.pageDescription}>
-            {favoriteQuotes.length > 0 
+            {loading 
+              ? 'Loading...' 
+              : favoriteQuotes.length > 0 
               ? `You have ${favoriteQuotes.length} favorite quote${favoriteQuotes.length === 1 ? '' : 's'}`
               : "You haven't saved any favorite quotes yet"
             }
           </p>
         </div>
 
-        {error ? (
+        {loading ? (
+          <div className={styles.quotesGrid}>
+            {[...Array(3)].map((_, i) => (
+              <QuoteCard key={i} loading={true} />
+            ))}
+          </div>
+        ) : error ? (
           <div className={styles.error}>
             <h2>Error Loading Favorites</h2>
             <p>{error}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="btn btn-primary"
-            >
-              Try Again
-            </button>
           </div>
         ) : favoriteQuotes.length > 0 ? (
           <div className={styles.quotesGrid}>
             {favoriteQuotes.map(quote => (
-              <QuoteCard
-                key={quote.date}
-                quote={quote}
-                showDate={true}
-                showActions={true}
-                compact={true}
-                featured={quote.isQuoteOfTheWeek}
+              <QuoteCard 
+                key={quote._id}
+                quote={quote} 
+                isInitialFavorite={true}
+                onFavoriteToggle={handleFavoriteToggle}
               />
             ))}
           </div>

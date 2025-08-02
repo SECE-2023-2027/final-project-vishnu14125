@@ -14,13 +14,13 @@ export default async function HomePage() {
   try {
     await connectDB();
     
-    // Get today's quote
+    
     todayQuote = await Quote.findOne({ date: today }).lean();
     
-    // Get quote of the week
+     
     quoteOfTheWeek = await Quote.findOne({ isQuoteOfTheWeek: true }).lean();
     
-    // Convert MongoDB ObjectId to string
+     
     if (todayQuote) {
       todayQuote._id = todayQuote._id.toString();
     }
@@ -35,11 +35,11 @@ export default async function HomePage() {
   return (
     <div className={styles.homePage}>
       <div className="container">
-        {/* Hero Section */}
+         
         <section className={styles.hero}>
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>
-              📅 Welcome to Quote Calendar
+              Welcome to Quote Calendar
             </h1>
             <p className={styles.heroSubtitle}>
               Discover daily inspiration with carefully curated quotes. 
@@ -47,16 +47,16 @@ export default async function HomePage() {
             </p>
             <div className={styles.heroActions}>
               <Link href="/calendar" className="btn btn-primary">
-                📅 View Calendar
+                View Calendar
               </Link>
               <Link href="/login" className="btn btn-secondary">
-                🔑 Sign In
+                Sign In
               </Link>
             </div>
           </div>
         </section>
 
-        {/* Today's Quote Section */}
+         
         {todayQuote && (
           <section className={styles.todaySection}>
             <div className={styles.sectionHeader}>
@@ -75,7 +75,7 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* Quote of the Week Section */}
+         
         {quoteOfTheWeek && quoteOfTheWeek.date !== today && (
           <section className={styles.weekSection}>
             <div className={styles.sectionHeader}>
@@ -90,7 +90,7 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* Features Section */}
+        
         <section className={styles.features}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Features</h2>
@@ -147,7 +147,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Call to Action */}
+         
         <section className={styles.cta}>
           <div className={styles.ctaContent}>
             <h2 className={styles.ctaTitle}>Start Your Journey</h2>

@@ -16,12 +16,13 @@ export default function QuoteCard({
   noBorder = false,
   truncate = false,
   maxLength = 150,
+  isInitialFavorite = false,
   onFavoriteToggle,
   loading = false 
 }) {
   const { data: session } = useSession();
   const [favoriteLoading, setFavoriteLoading] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(isInitialFavorite);
 
   if (loading) {
     return (
@@ -77,11 +78,9 @@ export default function QuoteCard({
       try {
         await navigator.share(shareData);
       } catch (error) {
-        // Fallback to clipboard
         navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
       }
     } else {
-      // Fallback to clipboard
       navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
     }
   };
@@ -119,7 +118,7 @@ export default function QuoteCard({
                 className={styles.actionBtn}
                 title="Share quote"
               >
-                📤
+                
               </button>
               {canEdit && (
                 <Link
@@ -127,7 +126,7 @@ export default function QuoteCard({
                   className={styles.actionBtn}
                   title="Edit quote"
                 >
-                  ✏️
+  
                 </Link>
               )}
             </div>

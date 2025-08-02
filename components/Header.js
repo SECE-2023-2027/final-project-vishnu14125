@@ -45,10 +45,10 @@ export default function Header() {
       <div className="container">
         <nav className={styles.nav}>
           <Link href="/" className={styles.logo} onClick={closeMobileMenu}>
-            📅 Quote Calendar
+            Quote Calendar
           </Link>
 
-          {/* Desktop Navigation */}
+           
           <ul className={styles.navLinks}>
             {navItems.map((item) => {
               if (item.requireAuth && !session) return null;
@@ -75,7 +75,7 @@ export default function Header() {
             ))}
           </ul>
 
-          {/* Desktop User Menu */}
+           
           <div className={styles.userMenu}>
             {status === 'loading' ? (
               <div className="spinner" />

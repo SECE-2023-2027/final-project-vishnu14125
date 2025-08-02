@@ -41,8 +41,12 @@ export async function generateMetadata({ params }) {
   }
 }
 
+import { getSession } from '../../../auth/sessionUtils.js';
+import User from '../../../db/User.js';
+
 export default async function QuoteDetailPage({ params }) {
   const { date } = params;
+  const session = await getSession();
 
   // Validate date format
   if (!isValidDate(date)) {
@@ -56,6 +60,7 @@ export default async function QuoteDetailPage({ params }) {
 
   let quote = null;
   let error = null;
+  let isFavorite = false;
 
   try {
     await connectDB();
@@ -63,6 +68,12 @@ export default async function QuoteDetailPage({ params }) {
     
     if (quote) {
       quote._id = quote._id.toString();
+      if (session) {
+        const user = await User.findById(session.user.id).lean();
+        if (user) {
+          isFavorite = user.favorites.includes(date);
+        }
+      }
     }
   } catch (err) {
     console.error('Error fetching quote:', err);
@@ -120,6 +131,7 @@ export default async function QuoteDetailPage({ params }) {
               showDate={false}
               featured={quote.isQuoteOfTheWeek}
               showActions={true}
+              isInitialFavorite={isFavorite}
             />
           </div>
         ) : (
